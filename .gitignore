@@ -1,0 +1,4 @@
+node_modules/
+.env
+config/apikey.json
+.vercel
