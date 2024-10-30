@@ -3,7 +3,7 @@ const app = express()
 require('dotenv').config()
 const database = require("./config/database")
 const port = process.env.PORT
-const routeClient = require("./routes/client/index.route");
+const routeClient = require("./routes/client/index_route");
 
 database.connect(process.env.MONGO_URL)
 
