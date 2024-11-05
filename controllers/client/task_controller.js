@@ -2,6 +2,10 @@ const Task = require("../../models/task_model");
 
 module.exports.index = async (req, res) => {
   const find = {
+    $or: [
+      {createdBy: res.locals.user.id},
+      {listUser: res.locals.user.id}
+    ],
     deleted: false
   }
   if(req.query.status) {
@@ -29,7 +33,6 @@ module.exports.index = async (req, res) => {
   
   const skip = (page - 1)*limit
 
-  console.log(limit, skip)
 
   const tasks = await Task.find(find).limit(limit).skip(skip).sort(sort);
 
@@ -41,10 +44,18 @@ module.exports.detail = async (req, res) => {
 
   const task = await Task.findOne({
     _id: id,
+    $or: [
+      {createdBy: res.locals.user.id},
+      {listUser: res.locals.user.id}
+    ],
     deleted: false
   });
 
-  res.json(task);
+  res.json({
+    "code": "success",
+    "msg": "Thanh cong",
+    "data": task
+  });
 }
 
 module.exports.changemulti = async (req, res) => {
@@ -59,6 +70,7 @@ module.exports.changemulti = async (req, res) => {
 
 module.exports.createPost = async (req, res) => {
   const data = req.body
+  data.createdBy = res.locals.user.id
   const record = new Task(data)
   await record.save()
   res.json(data)
